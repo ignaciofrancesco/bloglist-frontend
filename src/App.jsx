@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import Notification from "./components/Notification";
 import blogsService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -11,6 +12,7 @@ const App = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     blogsService.getAll().then((blogs) => setBlogs(blogs));
@@ -42,6 +44,14 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (error) {
+      setNotification({
+        message: `Invalid credentials: ${error.message}`,
+        type: "error",
+      });
+
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
       console.error(error);
     }
   };
@@ -64,23 +74,43 @@ const App = () => {
       author,
       url,
     };
+    try {
+      const createdBlog = await blogsService.create(newBlog);
 
-    const createdBlog = await blogsService.create(newBlog);
+      // Add blog to state
+      const newBlogsArray = blogs.concat(createdBlog);
+      setBlogs(newBlogsArray);
 
-    // Add blog to state
-    const newBlogsArray = blogs.concat(createdBlog);
-    setBlogs(newBlogsArray);
+      // Clear form
+      setTitle("");
+      setAuthor("");
+      setUrl("");
 
-    // Clear form
-    setTitle("");
-    setAuthor("");
-    setUrl("");
+      setNotification({
+        message: `New blog created: ${createdBlog.title}`,
+        type: "success",
+      });
+
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    } catch (error) {
+      setNotification({
+        message: `Couldn't create the blog: ${error.message}`,
+        type: "error",
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+      console.error(error);
+    }
   };
 
   if (user === null) {
     return (
       <>
         <h1>Please, login</h1>
+        <Notification notification={notification} />
         <form onSubmit={handleLogin}>
           <div>
             <label htmlFor="username">Username: </label>
@@ -113,6 +143,7 @@ const App = () => {
   return (
     <>
       <h1>Blogs</h1>
+      <Notification notification={notification} />
       <div>
         <span>{user.name} logged in</span>
         <button type="button" onClick={handleLogout}>

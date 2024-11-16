@@ -19,12 +19,8 @@ const create = async (newBlog) => {
     },
   };
 
-  try {
-    const response = await axios.post(baseUrl, newBlog, config);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.post(baseUrl, newBlog, config);
+  return response.data;
 };
 
 export default { getAll, setAuthorization, create };
