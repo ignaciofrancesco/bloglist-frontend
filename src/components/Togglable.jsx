@@ -3,7 +3,6 @@ import { forwardRef, useState, useImperativeHandle } from "react";
 const Togglable = forwardRef((props, refs) => {
   /* STATE */
   const [isVisible, setIsVisible] = useState(false);
-  console.log(refs);
 
   /* REFS */
   useImperativeHandle(refs, () => {
