@@ -1,19 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
+import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 import blogsService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
+  /* STATE */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
   const [notification, setNotification] = useState(null);
 
+  /* REFS */
+  const blogFormRef = useRef();
+
+  /* EFFECTS */
   useEffect(() => {
     blogsService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
@@ -23,9 +27,11 @@ const App = () => {
     if (loggedUserJSON !== null) {
       const loggedUser = JSON.parse(loggedUserJSON);
       setUser(loggedUser);
+      blogsService.setAuthorization(loggedUser.token);
     }
   }, []);
 
+  /* HANDLERS */
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -65,27 +71,19 @@ const App = () => {
     setUser(null);
   };
 
-  const handleSubmitBlog = async (event) => {
-    event.preventDefault();
-
-    // Post blog to the backend
-    const newBlog = {
-      title,
-      author,
-      url,
-    };
+  const createBlog = async (newBlog) => {
     try {
+      // Hide the BlogForm immediately
+      blogFormRef.current.toggleVisibility();
+
+      // Tries to create blog in the backend
       const createdBlog = await blogsService.create(newBlog);
 
       // Add blog to state
       const newBlogsArray = blogs.concat(createdBlog);
       setBlogs(newBlogsArray);
 
-      // Clear form
-      setTitle("");
-      setAuthor("");
-      setUrl("");
-
+      // Notificates the user
       setNotification({
         message: `New blog created: ${createdBlog.title}`,
         type: "success",
@@ -106,6 +104,8 @@ const App = () => {
     }
   };
 
+  /* VIEW */
+
   if (user === null) {
     return (
       <>
@@ -118,7 +118,7 @@ const App = () => {
               id="username"
               type="text"
               value={username}
-              onInput={(event) => {
+              onChange={(event) => {
                 setUsername(event.target.value);
               }}
             />
@@ -129,7 +129,7 @@ const App = () => {
               id="password"
               type="password"
               value={password}
-              onInput={(event) => {
+              onChange={(event) => {
                 setPassword(event.target.value);
               }}
             />
@@ -151,42 +151,9 @@ const App = () => {
         </button>
       </div>
       <br></br>
-      <form onSubmit={handleSubmitBlog}>
-        <div>
-          <label htmlFor="title">Title: </label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onInput={(event) => {
-              setTitle(event.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="author">Author: </label>
-          <input
-            id="author"
-            type="text"
-            value={author}
-            onInput={(event) => {
-              setAuthor(event.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="url">Url: </label>
-          <input
-            id="url"
-            type="text"
-            value={url}
-            onInput={(event) => {
-              setUrl(event.target.value);
-            }}
-          />
-        </div>
-        <button type="submit">Create</button>
-      </form>
+      <Togglable ref={blogFormRef}>
+        <BlogForm createBlog={createBlog} />
+      </Togglable>
       <br></br>
       <div>
         {blogs.map((blog) => (
