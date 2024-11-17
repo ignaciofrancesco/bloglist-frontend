@@ -128,6 +128,11 @@ const App = () => {
 
   /* VIEW */
 
+  // Sort in descending order
+  const blogsSorted = blogs.toSorted((b1, b2) => {
+    return b2.likes - b1.likes;
+  });
+
   if (user === null) {
     return (
       <>
@@ -178,7 +183,7 @@ const App = () => {
       </Togglable>
       <br></br>
       <div>
-        {blogs.map((blog) => (
+        {blogsSorted.map((blog) => (
           <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         ))}
       </div>
