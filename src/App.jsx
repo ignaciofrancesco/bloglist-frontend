@@ -104,6 +104,28 @@ const App = () => {
     }
   };
 
+  // This is a multipurpose updater. Only takes care of updating the blog received as a parameter.
+  const updateBlog = async (blog) => {
+    try {
+      // Update blog through the backend
+      const updatedBlog = await blogsService.update(blog);
+      // Update state
+      const newBlogsArray = [...blogs].map((b) =>
+        b.id === updatedBlog.id ? updatedBlog : b
+      );
+      setBlogs(newBlogsArray);
+    } catch (error) {
+      setNotification({
+        message: `Couldn't update the blog: ${error.message}`,
+        type: "error",
+      });
+
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
+  };
+
   /* VIEW */
 
   if (user === null) {
@@ -157,7 +179,7 @@ const App = () => {
       <br></br>
       <div>
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         ))}
       </div>
     </>

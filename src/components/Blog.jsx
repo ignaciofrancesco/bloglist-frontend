@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   /* STATE */
   const [detailsShowing, setDetailsShowing] = useState(false);
 
@@ -16,6 +16,14 @@ const Blog = ({ blog }) => {
     border: "solid",
     borderWidth: 1,
     marginBottom: 5,
+  };
+
+  /* HANDLERS */
+  const handleClickLike = async (event) => {
+    // Increase likes
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+    // Call the prop function to update database, and state of the app
+    await updateBlog(updatedBlog);
   };
 
   /* VIEW */
@@ -35,7 +43,7 @@ const Blog = ({ blog }) => {
           <ul>
             <li>{blog.url}</li>
             <li>
-              Likes {blog.likes} <button>like</button>
+              Likes {blog.likes} <button onClick={handleClickLike}>like</button>
             </li>
             {blog.user && <li>{blog.user.name}</li>}
           </ul>
