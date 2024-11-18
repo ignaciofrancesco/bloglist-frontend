@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   /* STATE */
   const [detailsShowing, setDetailsShowing] = useState(false);
 
@@ -9,7 +9,27 @@ const Blog = ({ blog, updateBlog }) => {
     setDetailsShowing(!detailsShowing);
   };
 
-  /* STYLES */
+  const handleClickLike = async (event) => {
+    // Increase likes
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+    // Call the prop function to update database, and state of the app
+    await updateBlog(updatedBlog);
+  };
+
+  const handleClickRemove = async (event) => {
+    const confirms = window.confirm(
+      `Do you really want to remove the blog "${blog.title}"?`
+    );
+
+    if (!confirms) {
+      return;
+    }
+
+    const result = await deleteBlog(blog);
+  };
+
+  /* VIEW */
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -18,18 +38,12 @@ const Blog = ({ blog, updateBlog }) => {
     marginBottom: 5,
   };
 
-  /* HANDLERS */
-  const handleClickLike = async (event) => {
-    // Increase likes
-    const updatedBlog = { ...blog, likes: blog.likes + 1 };
-    // Call the prop function to update database, and state of the app
-    await updateBlog(updatedBlog);
-  };
+  // Add a button to delete blog
+  // Implement deleting in the backend
+  // Ask for confirmation before deleting
 
-  /* VIEW */
+  // Show the button only for blogs created by the logged in user
 
-  // Create html
-  // Make it interactive
   return (
     <div style={blogStyle}>
       <div>
@@ -47,6 +61,9 @@ const Blog = ({ blog, updateBlog }) => {
             </li>
             {blog.user && <li>{blog.user.name}</li>}
           </ul>
+        )}
+        {blog.user.name === user.name && (
+          <button onClick={handleClickRemove}>Remove</button>
         )}
       </div>
     </div>

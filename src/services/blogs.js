@@ -28,4 +28,16 @@ const update = async (blog) => {
   return response.data;
 };
 
-export default { getAll, setAuthorization, create, update };
+const deleteBlog = async (blog) => {
+  const config = {
+    headers: {
+      Authorization: authorization,
+    },
+  };
+
+  const response = await axios.delete(`${baseUrl}/${blog.id}`, config);
+
+  return response;
+};
+
+export default { getAll, setAuthorization, create, update, deleteBlog };

@@ -126,6 +126,25 @@ const App = () => {
     }
   };
 
+  const deleteBlog = async (blog) => {
+    try {
+      // Delete request to back
+      const result = await blogsService.deleteBlog(blog);
+      // Update state
+      const newBlogsArray = blogs.filter((b) => b.id !== blog.id);
+      setBlogs(newBlogsArray);
+    } catch (error) {
+      setNotification({
+        message: `Couldn't remove the blog: ${error.message}`,
+        type: "error",
+      });
+
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
+  };
+
   /* VIEW */
 
   // Sort in descending order
@@ -184,7 +203,13 @@ const App = () => {
       <br></br>
       <div>
         {blogsSorted.map((blog) => (
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            updateBlog={updateBlog}
+            deleteBlog={deleteBlog}
+          />
         ))}
       </div>
     </>
