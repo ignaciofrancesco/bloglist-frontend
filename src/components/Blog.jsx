@@ -38,12 +38,6 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
     marginBottom: 5,
   };
 
-  // Add a button to delete blog
-  // Implement deleting in the backend
-  // Ask for confirmation before deleting
-
-  // Show the button only for blogs created by the logged in user
-
   return (
     <div style={blogStyle}>
       <div>
