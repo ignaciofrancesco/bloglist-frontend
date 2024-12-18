@@ -1,6 +1,10 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: {
+    browser: true,
+    es2020: true,
+    "vitest-globals/env": true,
+  },
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -18,7 +22,6 @@ module.exports = {
     ],
     "react/prop-types": false,
     indent: ["error", 2],
-    "linebreak-style": ["error", "unix"],
     quotes: ["error", "double"],
     semi: ["error", "always"],
     eqeqeq: "error",
