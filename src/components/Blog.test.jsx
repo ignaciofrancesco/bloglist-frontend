@@ -69,3 +69,46 @@ test("the blog s URL and number of likes are shown when the button controlling t
   const url = screen.getByText("www.yo.com", { exact: false });
   expect(url).toBeDefined();
 });
+
+/* 
+5.15: Blog List Tests, step 3
+Make a test, which ensures that if the like button is clicked twice, the event handler the component received as props is called twice.
+ */
+
+test("if the like button is clicked twice, the event handler the component received as props is called twice", async () => {
+  // ARRANGE
+  const user = {
+    name: "ignacio",
+  };
+  const blog = {
+    title: "Blog title",
+    author: "John Wick",
+    url: "www.yo.com",
+    likes: 7,
+    user,
+  };
+
+  // Mock the handler function
+  const mockHandler = vi.fn();
+
+  // Render component
+  const { container } = render(
+    <Blog blog={blog} user={user} updateBlog={mockHandler} />
+  );
+
+  // ACT
+
+  // Create a user session
+  const browserUser = userEvent.setup();
+
+  const showButton = screen.getByTestId("show-hide-button");
+  await browserUser.click(showButton);
+
+  const likeButton = screen.getByTestId("like-button");
+  await browserUser.click(likeButton);
+  await browserUser.click(likeButton);
+
+  // ASSERT
+
+  expect(mockHandler.mock.calls).toHaveLength(2);
+});

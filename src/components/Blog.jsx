@@ -55,7 +55,10 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
           <ul>
             <li>{blog.url}</li>
             <li data-testid="likes">
-              Likes {blog.likes} <button onClick={handleClickLike}>like</button>
+              Likes {blog.likes}{" "}
+              <button onClick={handleClickLike} data-testid="like-button">
+                like
+              </button>
             </li>
             {blog.user && <li>{blog.user.name}</li>}
           </ul>
