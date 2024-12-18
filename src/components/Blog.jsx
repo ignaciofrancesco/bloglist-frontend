@@ -43,7 +43,11 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
       <div>
         <p>
           {blog.title}, by {blog.author}
-          <button type="button" onClick={toggleDetails}>
+          <button
+            type="button"
+            onClick={toggleDetails}
+            data-testid="show-hide-button"
+          >
             {detailsShowing ? "Hide" : "View"}
           </button>
         </p>
