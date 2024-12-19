@@ -61,7 +61,9 @@ const BlogForm = (props) => {
           }}
         />
       </div>
-      <button type="submit">Create</button>
+      <button type="submit" data-testid="create-button">
+        Create
+      </button>
     </form>
   );
 };
