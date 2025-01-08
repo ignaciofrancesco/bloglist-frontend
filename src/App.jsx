@@ -157,7 +157,7 @@ const App = () => {
       <>
         <h1>Please, login</h1>
         <Notification notification={notification} />
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} data-testid="login-form">
           <div>
             <label htmlFor="username">Username: </label>
             <input
@@ -167,6 +167,7 @@ const App = () => {
               onChange={(event) => {
                 setUsername(event.target.value);
               }}
+              data-testid="username"
             />
           </div>
           <div>
@@ -178,6 +179,7 @@ const App = () => {
               onChange={(event) => {
                 setPassword(event.target.value);
               }}
+              data-testid="password"
             />
           </div>
           <button type="submit">Login</button>
@@ -201,7 +203,7 @@ const App = () => {
         <BlogForm createBlog={createBlog} />
       </Togglable>
       <br></br>
-      <div>
+      <div className="bloglist">
         {blogsSorted.map((blog) => (
           <Blog
             key={blog.id}

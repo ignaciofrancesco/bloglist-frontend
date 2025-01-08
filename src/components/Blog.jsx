@@ -39,7 +39,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div>
         <p>
           {blog.title}, by {blog.author}
@@ -55,7 +55,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
           <ul>
             <li>{blog.url}</li>
             <li data-testid="likes">
-              Likes {blog.likes}{" "}
+              <span>Likes {blog.likes} </span>
               <button onClick={handleClickLike} data-testid="like-button">
                 like
               </button>
