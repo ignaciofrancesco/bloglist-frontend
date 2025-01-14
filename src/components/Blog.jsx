@@ -18,7 +18,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
 
   const handleClickRemove = async (event) => {
     const confirms = window.confirm(
-      `Do you really want to remove the blog "${blog.title}"?`
+      `Do you really want to remove the blog "${blog.title}"?`,
     );
 
     if (!confirms) {

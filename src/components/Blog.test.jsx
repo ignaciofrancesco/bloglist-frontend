@@ -93,7 +93,7 @@ test("if the like button is clicked twice, the event handler the component recei
 
   // Render component
   const { container } = render(
-    <Blog blog={blog} user={user} updateBlog={mockHandler} />
+    <Blog blog={blog} user={user} updateBlog={mockHandler} />,
   );
 
   // ACT

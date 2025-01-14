@@ -111,7 +111,7 @@ const App = () => {
       const updatedBlog = await blogsService.update(blog);
       // Update state
       const newBlogsArray = [...blogs].map((b) =>
-        b.id === updatedBlog.id ? updatedBlog : b
+        b.id === updatedBlog.id ? updatedBlog : b,
       );
       setBlogs(newBlogsArray);
     } catch (error) {
