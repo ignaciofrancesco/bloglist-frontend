@@ -6,25 +6,27 @@ import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import blogsService from "./services/blogs";
 import loginService from "./services/login";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createBlog, initializeBlogs } from "./reducers/blogReducer";
 
 const App = () => {
   /* REDUX */
-  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs); // i select the slice of state i need
+  const dispatch = useDispatch(); // to dispatch redux actions to change the state
 
   /* STATE */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [blogs, setBlogs] = useState([]);
 
   /* REFS */
   const blogFormRef = useRef();
 
   /* EFFECTS */
+  // Initializes the blogs array
   useEffect(() => {
-    blogsService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser");
@@ -80,22 +82,18 @@ const App = () => {
     setUser(null);
   };
 
-  const createBlog = async (newBlog) => {
+  const handleSubmitBlog = async (newBlog) => {
     try {
       // Hide the BlogForm immediately
       blogFormRef.current.toggleVisibility();
 
-      // Tries to create blog in the backend
-      const createdBlog = await blogsService.create(newBlog);
-
-      // Add blog to state
-      const newBlogsArray = blogs.concat(createdBlog);
-      setBlogs(newBlogsArray);
+      // Use redux thunk to save to db and change state
+      dispatch(createBlog(newBlog));
 
       // Dispatch redux action to notificate
       dispatch(
         setNotification({
-          message: `New blog created: ${createdBlog.title}`,
+          message: `New blog created: ${newBlog.title}`,
           messageType: "success",
         }),
       );
@@ -212,7 +210,7 @@ const App = () => {
       </div>
       <br></br>
       <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-        <BlogForm createBlog={createBlog} />
+        <BlogForm createBlog={handleSubmitBlog} />
       </Togglable>
       <br></br>
       <div className="bloglist">
