@@ -1,18 +1,22 @@
 import { useState, useEffect, useRef } from "react";
+import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import blogsService from "./services/blogs";
 import loginService from "./services/login";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+  /* REDUX */
+  const dispatch = useDispatch();
+
   /* STATE */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(null);
 
   /* REFS */
   const blogFormRef = useRef();
@@ -49,16 +53,21 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
+      // Dispatch redux action
+      dispatch(
+        setNotification({
+          message: `Login successful`,
+          messageType: "success",
+        }),
+      );
     } catch (error) {
-      setNotification({
-        message: `Invalid credentials: ${error.message}`,
-        type: "error",
-      });
-
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-      console.error(error);
+      // Dispatch redux action
+      dispatch(
+        setNotification({
+          message: `Invalid credentials`,
+          messageType: "error",
+        }),
+      );
     }
   };
 
@@ -83,24 +92,21 @@ const App = () => {
       const newBlogsArray = blogs.concat(createdBlog);
       setBlogs(newBlogsArray);
 
-      // Notificates the user
-      setNotification({
-        message: `New blog created: ${createdBlog.title}`,
-        type: "success",
-      });
-
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `New blog created: ${createdBlog.title}`,
+          messageType: "success",
+        }),
+      );
     } catch (error) {
-      setNotification({
-        message: `Couldn't create the blog: ${error.message}`,
-        type: "error",
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-      console.error(error);
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Couldn't create the blog: ${error.message}`,
+          messageType: "error",
+        }),
+      );
     }
   };
 
@@ -115,14 +121,13 @@ const App = () => {
       );
       setBlogs(newBlogsArray);
     } catch (error) {
-      setNotification({
-        message: `Couldn't update the blog: ${error.message}`,
-        type: "error",
-      });
-
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Couldn't update the blog: ${error.message}`,
+          messageType: "error",
+        }),
+      );
     }
   };
 
@@ -133,15 +138,22 @@ const App = () => {
       // Update state
       const newBlogsArray = blogs.filter((b) => b.id !== blog.id);
       setBlogs(newBlogsArray);
-    } catch (error) {
-      setNotification({
-        message: `Couldn't remove the blog: ${error.message}`,
-        type: "error",
-      });
 
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Blog deleted: ${blog.title}`,
+          messageType: "success",
+        }),
+      );
+    } catch (error) {
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Couldn't update the blog: ${error.message}`,
+          messageType: "error",
+        }),
+      );
     }
   };
 
@@ -156,7 +168,7 @@ const App = () => {
     return (
       <>
         <h1>Please, login</h1>
-        <Notification notification={notification} />
+        <Notification />
         <form onSubmit={handleLogin} data-testid="login-form">
           <div>
             <label htmlFor="username">Username: </label>
@@ -191,7 +203,7 @@ const App = () => {
   return (
     <>
       <h1>Blogs</h1>
-      <Notification notification={notification} />
+      <Notification />
       <div>
         <span>{user.name} logged in</span>
         <button type="button" onClick={handleLogout}>
