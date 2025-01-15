@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useEffect } from "react";
 import blogsService from "../services/blogs";
+import { setNotification } from "./notificationReducer";
 
 // Create the blog slice
 // Uses redux toolkit
@@ -16,10 +17,19 @@ const blogSlice = createSlice({
       state.push(action.payload);
     },
     update(state, action) {
-      return action.payload;
+      const updatedBlog = action.payload;
+      const newBlogsArray = state.map((b) =>
+        b.id === updatedBlog.id ? updatedBlog : b,
+      );
+      return newBlogsArray;
     },
     remove(state, action) {
-      return null;
+      const blogDeleted = action.payload;
+      const newBlogsArray = state.filter((b) => {
+        return b.id !== blogDeleted.id;
+      });
+
+      return newBlogsArray;
     },
   },
 });
@@ -39,6 +49,41 @@ export const createBlog = (blog) => {
     const blogCreated = await blogsService.create(blog);
     // Change state
     dispatch(append(blogCreated));
+  };
+};
+
+export const updateBlog = (blog) => {
+  return async (dispatch) => {
+    // Save blog in db
+    const updatedBlog = await blogsService.update(blog);
+    // Update state
+    dispatch(update(updatedBlog));
+  };
+};
+
+export const removeBlog = (blog) => {
+  return async (dispatch) => {
+    try {
+      // Delete from db
+      await blogsService.deleteBlog(blog);
+      // Update state
+      dispatch(remove(blog));
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Blog deleted: ${blog.title}`,
+          messageType: "success",
+        }),
+      );
+    } catch (error) {
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Couldn't delete the blog: ${error.message}`,
+          messageType: "error",
+        }),
+      );
+    }
   };
 };
 

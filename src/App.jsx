@@ -108,53 +108,6 @@ const App = () => {
     }
   };
 
-  // This is a multipurpose updater. Only takes care of updating the blog received as a parameter.
-  const updateBlog = async (blog) => {
-    try {
-      // Update blog through the backend
-      const updatedBlog = await blogsService.update(blog);
-      // Update state
-      const newBlogsArray = [...blogs].map((b) =>
-        b.id === updatedBlog.id ? updatedBlog : b,
-      );
-      setBlogs(newBlogsArray);
-    } catch (error) {
-      // Dispatch redux action to notificate
-      dispatch(
-        setNotification({
-          message: `Couldn't update the blog: ${error.message}`,
-          messageType: "error",
-        }),
-      );
-    }
-  };
-
-  const deleteBlog = async (blog) => {
-    try {
-      // Delete request to back
-      const result = await blogsService.deleteBlog(blog);
-      // Update state
-      const newBlogsArray = blogs.filter((b) => b.id !== blog.id);
-      setBlogs(newBlogsArray);
-
-      // Dispatch redux action to notificate
-      dispatch(
-        setNotification({
-          message: `Blog deleted: ${blog.title}`,
-          messageType: "success",
-        }),
-      );
-    } catch (error) {
-      // Dispatch redux action to notificate
-      dispatch(
-        setNotification({
-          message: `Couldn't update the blog: ${error.message}`,
-          messageType: "error",
-        }),
-      );
-    }
-  };
-
   /* VIEW */
 
   // Sort in descending order
@@ -215,13 +168,7 @@ const App = () => {
       <br></br>
       <div className="bloglist">
         {blogsSorted.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            user={user}
-            updateBlog={updateBlog}
-            deleteBlog={deleteBlog}
-          />
+          <Blog key={blog.id} blog={blog} user={user} />
         ))}
       </div>
     </>

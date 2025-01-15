@@ -1,10 +1,16 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { removeBlog, updateBlog } from "../reducers/blogReducer";
 
-const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, user }) => {
+  /* REDUX */
+  const dispatch = useDispatch();
+
   /* STATE */
   const [detailsShowing, setDetailsShowing] = useState(false);
 
   /* HANDLERS */
+
   const toggleDetails = (event) => {
     setDetailsShowing(!detailsShowing);
   };
@@ -12,8 +18,8 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   const handleClickLike = async (event) => {
     // Increase likes
     const updatedBlog = { ...blog, likes: blog.likes + 1 };
-    // Call the prop function to update database, and state of the app
-    await updateBlog(updatedBlog);
+    // Call redux thunk
+    dispatch(updateBlog(updatedBlog));
   };
 
   const handleClickRemove = async (event) => {
@@ -25,7 +31,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
       return;
     }
 
-    const result = await deleteBlog(blog);
+    dispatch(removeBlog(blog));
   };
 
   /* VIEW */
