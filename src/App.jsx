@@ -8,16 +8,17 @@ import blogsService from "./services/blogs";
 import loginService from "./services/login";
 import { useDispatch, useSelector } from "react-redux";
 import { createBlog, initializeBlogs } from "./reducers/blogReducer";
+import { loginUser, logoutUser, setUser } from "./reducers/userReducer";
 
 const App = () => {
   /* REDUX */
   const blogs = useSelector((state) => state.blogs); // i select the slice of state i need
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch(); // to dispatch redux actions to change the state
 
   /* STATE */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   /* REFS */
   const blogFormRef = useRef();
@@ -32,10 +33,11 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser");
     if (loggedUserJSON !== null) {
       const loggedUser = JSON.parse(loggedUserJSON);
-      setUser(loggedUser);
-      blogsService.setAuthorization(loggedUser.token);
+
+      // HERE DISPATCH A REDUX ACTION TO SET USER
+      dispatch(setUser(loggedUser));
     }
-  }, []);
+  }, [dispatch]);
 
   /* HANDLERS */
   const handleLogin = async (event) => {
@@ -43,19 +45,14 @@ const App = () => {
 
     // Use the login service to login
     try {
-      const user = await loginService.login(username, password);
-
-      // Set authorization in the blogs service
-      blogsService.setAuthorization(user.token);
-
-      // Save user to local storage
-      window.localStorage.setItem("loggedUser", JSON.stringify(user));
+      // HERE DISPATCH A REDUX ACTION TO login USER
+      dispatch(loginUser(username, password));
 
       // Set new state
-      setUser(user);
       setUsername("");
       setPassword("");
-      // Dispatch redux action
+
+      // Dispatch redux action for notification
       dispatch(
         setNotification({
           message: `Login successful`,
@@ -74,12 +71,7 @@ const App = () => {
   };
 
   const handleLogout = async (event) => {
-    // Clear token in blogs service
-    blogsService.setAuthorization(null);
-    // Clear localstorage
-    window.localStorage.removeItem("loggedUser");
-    // Clear state
-    setUser(null);
+    dispatch(logoutUser());
   };
 
   const handleSubmitBlog = async (newBlog) => {
