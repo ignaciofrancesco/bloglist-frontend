@@ -4,15 +4,15 @@ import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
-import blogsService from "./services/blogs";
-import loginService from "./services/login";
+import UserList from "./components/UserList";
 import { useDispatch, useSelector } from "react-redux";
 import { createBlog, initializeBlogs } from "./reducers/blogReducer";
 import { loginUser, logoutUser, setUser } from "./reducers/userReducer";
+import { Routes, Route } from "react-router-dom";
+import BlogList from "./components/BlogList";
 
 const App = () => {
   /* REDUX */
-  const blogs = useSelector((state) => state.blogs); // i select the slice of state i need
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch(); // to dispatch redux actions to change the state
 
@@ -20,14 +20,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  /* REFS */
-  const blogFormRef = useRef();
-
   /* EFFECTS */
-  // Initializes the blogs array
-  useEffect(() => {
-    dispatch(initializeBlogs());
-  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser");
@@ -74,38 +67,7 @@ const App = () => {
     dispatch(logoutUser());
   };
 
-  const handleSubmitBlog = async (newBlog) => {
-    try {
-      // Hide the BlogForm immediately
-      blogFormRef.current.toggleVisibility();
-
-      // Use redux thunk to save to db and change state
-      dispatch(createBlog(newBlog));
-
-      // Dispatch redux action to notificate
-      dispatch(
-        setNotification({
-          message: `New blog created: ${newBlog.title}`,
-          messageType: "success",
-        }),
-      );
-    } catch (error) {
-      // Dispatch redux action to notificate
-      dispatch(
-        setNotification({
-          message: `Couldn't create the blog: ${error.message}`,
-          messageType: "error",
-        }),
-      );
-    }
-  };
-
   /* VIEW */
-
-  // Sort in descending order
-  const blogsSorted = blogs.toSorted((b1, b2) => {
-    return b2.likes - b1.likes;
-  });
 
   if (user === null) {
     return (
@@ -145,24 +107,18 @@ const App = () => {
 
   return (
     <>
-      <h1>Blogs</h1>
-      <Notification />
+      <h1>Blogs App</h1>
       <div>
         <span>{user.name} logged in</span>
         <button type="button" onClick={handleLogout}>
           Logout
         </button>
       </div>
-      <br></br>
-      <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-        <BlogForm createBlog={handleSubmitBlog} />
-      </Togglable>
-      <br></br>
-      <div className="bloglist">
-        {blogsSorted.map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} />
-        ))}
-      </div>
+      <Notification />
+      <Routes>
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/users" element={<UserList />} />
+      </Routes>
     </>
   );
 };
