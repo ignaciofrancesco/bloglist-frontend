@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 import {
   initializeBlogs,
   removeBlog,
   selectBlogById,
   updateBlog,
 } from "../reducers/blogReducer";
-import { useParams } from "react-router-dom";
 
 const Blog = (props) => {
   /* REACT ROUTER */
@@ -62,31 +62,35 @@ const Blog = (props) => {
   }
 
   return (
-    <div className="blog">
-      <div>
-        <h2>
-          {blog.title}, by {blog.author}
-        </h2>
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          <li>
-            <a href={blog.url} target="__blank">
-              {blog.url}
-            </a>
-          </li>
-          <li data-testid="likes">
-            <span>Likes {blog.likes} </span>
-            <button onClick={handleClickLike} data-testid="like-button">
-              like
-            </button>
-          </li>
-          {blog.user && <li>Added by {blog.user.name}</li>}
-        </ul>
+    <>
+      <div className="blog">
+        <div>
+          <h2>
+            {blog.title}, by {blog.author}
+          </h2>
+          <ul style={{ listStyle: "none", padding: 0 }}>
+            <li>
+              <a href={blog.url} target="__blank">
+                {blog.url}
+              </a>
+            </li>
+            <li data-testid="likes">
+              <span>Likes {blog.likes} </span>
+              <button onClick={handleClickLike} data-testid="like-button">
+                like
+              </button>
+            </li>
+            {blog.user && <li>Added by {blog.user.name}</li>}
+          </ul>
 
-        {blog.user.name === user.name && (
-          <button onClick={handleClickRemove}>Remove</button>
-        )}
+          {blog.user.name === user.name && (
+            <button onClick={handleClickRemove}>Remove</button>
+          )}
+        </div>
       </div>
-    </div>
+      <br></br>
+      <Link to="/blogs">Back</Link>
+    </>
   );
 };
 
