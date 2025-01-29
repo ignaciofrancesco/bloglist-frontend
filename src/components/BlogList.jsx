@@ -4,7 +4,7 @@ import Togglable from "./Togglable";
 import { useEffect, useRef } from "react";
 import { createBlog, initializeBlogs } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
-import Blog from "./Blog";
+import { Link } from "react-router-dom";
 
 const BlogList = (props) => {
   /* REDUX */
@@ -51,6 +51,15 @@ const BlogList = (props) => {
     return b2.likes - b1.likes;
   });
 
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+    listStyle: "none",
+  };
+
   return (
     <>
       <br></br>
@@ -59,9 +68,13 @@ const BlogList = (props) => {
       </Togglable>
       <br></br>
       <div className="bloglist">
-        {blogsSorted.map((blog) => (
-          <Blog key={blog.id} blog={blog} user={user} />
-        ))}
+        <ul style={{ padding: 0 }}>
+          {blogsSorted.map((blog) => (
+            <li key={blog.id} className="blog" style={blogStyle}>
+              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );

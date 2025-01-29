@@ -87,5 +87,10 @@ export const removeBlog = (blog) => {
   };
 };
 
+/* OTHER FUNCTIONS */
+export const selectBlogById = (state, id) => {
+  return state.blogs.find((b) => b.id === id);
+};
+
 export default blogSlice.reducer; // to import in the config store
 export const { set, append, update, remove } = blogSlice.actions; // to use in the redux thunk functions

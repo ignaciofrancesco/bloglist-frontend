@@ -1,10 +1,31 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { removeBlog, updateBlog } from "../reducers/blogReducer";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  initializeBlogs,
+  removeBlog,
+  selectBlogById,
+  updateBlog,
+} from "../reducers/blogReducer";
+import { useParams } from "react-router-dom";
 
-const Blog = ({ blog, user }) => {
+const Blog = (props) => {
+  /* REACT ROUTER */
+  const blogId = useParams().id;
+
   /* REDUX */
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const blog = useSelector((state) => selectBlogById(state, blogId));
+
+  /* EFFECTS */
+  useEffect(() => {
+    // This is done to work on page reload
+    // If the blog is null, initialize the blogs redux state, which will cause a rerender, and will select the blog
+    // include user check to prevent infinite loop in case the blog is not in the array
+    if (!blog && user) {
+      dispatch(initializeBlogs());
+    }
+  }, [dispatch, blog, user]);
 
   /* STATE */
   const [detailsShowing, setDetailsShowing] = useState(false);
@@ -36,39 +57,31 @@ const Blog = ({ blog, user }) => {
 
   /* VIEW */
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+  if (!blog) {
+    return <p>Loading blog...</p>;
+  }
 
   return (
-    <div className="blog" style={blogStyle}>
+    <div className="blog">
       <div>
-        <p>
+        <h2>
           {blog.title}, by {blog.author}
-          <button
-            type="button"
-            onClick={toggleDetails}
-            data-testid="show-hide-button"
-          >
-            {detailsShowing ? "Hide" : "View"}
-          </button>
-        </p>
-        {detailsShowing && (
-          <ul>
-            <li>{blog.url}</li>
-            <li data-testid="likes">
-              <span>Likes {blog.likes} </span>
-              <button onClick={handleClickLike} data-testid="like-button">
-                like
-              </button>
-            </li>
-            {blog.user && <li>{blog.user.name}</li>}
-          </ul>
-        )}
+        </h2>
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          <li>
+            <a href={blog.url} target="__blank">
+              {blog.url}
+            </a>
+          </li>
+          <li data-testid="likes">
+            <span>Likes {blog.likes} </span>
+            <button onClick={handleClickLike} data-testid="like-button">
+              like
+            </button>
+          </li>
+          {blog.user && <li>Added by {blog.user.name}</li>}
+        </ul>
+
         {blog.user.name === user.name && (
           <button onClick={handleClickRemove}>Remove</button>
         )}

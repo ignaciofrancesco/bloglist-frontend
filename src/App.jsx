@@ -15,7 +15,6 @@ import User from "./components/User";
 const App = () => {
   /* REDUX */
   const user = useSelector((state) => state.user);
-  const users = useSelector((state) => state.users);
   const dispatch = useDispatch(); // to dispatch redux actions to change the state
 
   /* STATE */
@@ -119,6 +118,7 @@ const App = () => {
       <Notification />
       <Routes>
         <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blogs/:id" element={<Blog />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/users/:id" element={<User />} />
       </Routes>
