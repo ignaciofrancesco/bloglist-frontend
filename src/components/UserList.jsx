@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import usersService from "../services/users";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeUsers } from "../reducers/usersReducer";
+import { Link } from "react-router-dom";
 
 const UserList = (props) => {
   const users = useSelector((state) => state.users);
@@ -26,12 +27,16 @@ const UserList = (props) => {
         </thead>
         <tbody>
           {users.length === 0 ? (
-            <p>loading users...</p>
+            <tr>
+              <td>loading users...</td>
+            </tr>
           ) : (
             users.map((user) => {
               return (
                 <tr key={user.id}>
-                  <td>{user.name}</td>
+                  <td>
+                    <Link to={`/users/${user.id}`}>{user.name}</Link>
+                  </td>
                   <td>{user.blogs.length}</td>
                 </tr>
               );

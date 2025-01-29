@@ -8,12 +8,14 @@ import UserList from "./components/UserList";
 import { useDispatch, useSelector } from "react-redux";
 import { createBlog, initializeBlogs } from "./reducers/blogReducer";
 import { loginUser, logoutUser, setUser } from "./reducers/userReducer";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useMatch } from "react-router-dom";
 import BlogList from "./components/BlogList";
+import User from "./components/User";
 
 const App = () => {
   /* REDUX */
   const user = useSelector((state) => state.user);
+  const users = useSelector((state) => state.users);
   const dispatch = useDispatch(); // to dispatch redux actions to change the state
 
   /* STATE */
@@ -118,6 +120,7 @@ const App = () => {
       <Routes>
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/users" element={<UserList />} />
+        <Route path="/users/:id" element={<User />} />
       </Routes>
     </>
   );
