@@ -2,11 +2,13 @@ const Comments = (props) => {
   const { comments } = props;
 
   return (
-    <>
+    <ul className="comment-list">
       {comments.map((c) => (
-        <li key={c.id}>{c.content}</li>
+        <li key={c.id} className="comment">
+          {c.content}
+        </li>
       ))}
-    </>
+    </ul>
   );
 };
 

@@ -1,3 +1,5 @@
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { Button, IconButton } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -71,15 +73,29 @@ const Blog = (props) => {
             </li>
             <li data-testid="likes">
               <span>Likes {blog.likes} </span>
-              <button onClick={handleClickLike} data-testid="like-button">
-                like
-              </button>
+              <IconButton
+                fontSize="inherit"
+                size="small"
+                color="primary"
+                aria-label="like"
+                onClick={handleClickLike}
+                data-testid="like-button"
+              >
+                <ThumbUpIcon />
+              </IconButton>
             </li>
             {blog.user && <li>Added by {blog.user.name}</li>}
           </ul>
 
           {blog.user.name === user.name && (
-            <button onClick={handleClickRemove}>Remove</button>
+            <Button
+              sx={{ marginTop: "1rem" }} // Corrected the sx syntax (it needs to be an object)
+              variant="outlined"
+              size="small"
+              onClick={handleClickRemove}
+            >
+              Remove
+            </Button>
           )}
         </div>
       </div>

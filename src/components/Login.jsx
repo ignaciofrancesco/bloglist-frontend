@@ -1,6 +1,6 @@
+import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setNotification } from "../reducers/notificationReducer";
 import { loginUser } from "../reducers/userReducer";
 
 const Login = (props) => {
@@ -13,43 +13,43 @@ const Login = (props) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
-    // Use the login service to login
-    try {
-      // HERE DISPATCH A REDUX ACTION TO login USER
-      dispatch(loginUser(username, password));
-
-      // Set new state
-      setUsername("");
-      setPassword("");
-
-      // Dispatch redux action for notification
-      dispatch(
-        setNotification({
-          message: `Login successful`,
-          messageType: "success",
-        }),
-      );
-    } catch (error) {
-      // Dispatch redux action
-      dispatch(
-        setNotification({
-          message: `Invalid credentials`,
-          messageType: "error",
-        }),
-      );
-    }
+    // HERE DISPATCH A REDUX ACTION TO login USER
+    dispatch(loginUser(username, password));
+    // Set new state
+    setUsername("");
+    setPassword("");
   };
 
   return (
-    <>
+    <Box
+      component="div"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <h2>Please, login</h2>
-      <form onSubmit={handleLogin} data-testid="login-form">
+      <Box
+        component="form"
+        sx={{
+          "& .MuiTextField-root, .MuiButton-root": { width: "20rem" },
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+        }}
+        noValidate
+        onSubmit={handleLogin}
+        data-testid="login-form"
+      >
         <div>
-          <label htmlFor="username">Username: </label>
-          <input
+          <TextField
             id="username"
             type="text"
+            label="username"
+            variant="outlined"
+            size="small"
             value={username}
             onChange={(event) => {
               setUsername(event.target.value);
@@ -58,20 +58,24 @@ const Login = (props) => {
           />
         </div>
         <div>
-          <label htmlFor="password">Password: </label>
-          <input
+          <TextField
             id="password"
             type="password"
             value={password}
+            label="password"
+            variant="outlined"
+            size="small"
             onChange={(event) => {
               setPassword(event.target.value);
             }}
             data-testid="password"
           />
         </div>
-        <button type="submit">Login</button>
-      </form>
-    </>
+        <Button variant="contained" type="submit">
+          Login
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

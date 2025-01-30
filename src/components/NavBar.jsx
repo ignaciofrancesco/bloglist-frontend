@@ -1,3 +1,4 @@
+import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../reducers/userReducer";
@@ -14,23 +15,66 @@ const NavBar = (props) => {
     navigate("/login");
   };
 
+  if (!user) {
+    return (
+      <AppBar position="fixed" sx={{ zIndex: 1200 }}>
+        <Toolbar>
+          <Typography
+            variant="h6"
+            color="inherit"
+            sx={{ textDecoration: "none" }}
+          >
+            BLOGS APP
+          </Typography>
+        </Toolbar>
+      </AppBar>
+    );
+  }
+
   return (
-    <nav>
-      <ul className="navbar">
-        <li>
-          <Link to="/blogs">Blogs</Link>
-        </li>
-        <li>
-          <Link to="/users">Users</Link>
-        </li>
-        <div>
-          <span>{user.name} logged in</span>
-          <button type="button" onClick={handleLogout}>
-            Logout
-          </button>
+    <AppBar position="fixed" sx={{ zIndex: 1200 }}>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
+      >
+        <div className="menu-items-container">
+          <Typography
+            variant="h6"
+            fontSize="inherit"
+            color="inherit"
+            component={Link}
+            to="/blogs"
+            sx={{ textDecoration: "none" }}
+          >
+            BLOGS
+          </Typography>
+          <Typography
+            variant="h6"
+            fontSize="inherit"
+            color="inherit"
+            component={Link}
+            to="/users"
+            sx={{ textDecoration: "none" }}
+          >
+            USERS
+          </Typography>
         </div>
-      </ul>
-    </nav>
+        <div className="menu-items-container">
+          <em>{user.name} logged in</em>
+          <Button
+            color="inherit"
+            variant="outlined"
+            size="small"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 };
 

@@ -1,8 +1,15 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { useEffect } from "react";
-import usersService from "../services/users";
 import { useDispatch, useSelector } from "react-redux";
-import { initializeUsers } from "../reducers/usersReducer";
 import { Link } from "react-router-dom";
+import { initializeUsers } from "../reducers/usersReducer";
 
 const UserList = (props) => {
   const users = useSelector((state) => state.users);
@@ -16,34 +23,34 @@ const UserList = (props) => {
   return (
     <>
       <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <td></td>
-            <td>
-              <strong>blogs created</strong>
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          {users.length === 0 ? (
-            <tr>
-              <td>loading users...</td>
-            </tr>
-          ) : (
-            users.map((user) => {
-              return (
-                <tr key={user.id}>
-                  <td>
-                    <Link to={`/users/${user.id}`}>{user.name}</Link>
-                  </td>
-                  <td>{user.blogs.length}</td>
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell align="center">Blogs Created</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.length === 0 ? (
+              <TableRow>
+                <TableCell>loading users...</TableCell>
+              </TableRow>
+            ) : (
+              users.map((user) => {
+                return (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <Link to={`/users/${user.id}`}>{user.name}</Link>
+                    </TableCell>
+                    <TableCell align="center">{user.blogs.length}</TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 };

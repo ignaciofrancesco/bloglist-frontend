@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -29,9 +30,8 @@ const App = () => {
   /* VIEW */
 
   return (
-    <>
-      {user && <NavBar />}
-      <h1>Blogs App</h1>
+    <Container sx={{ paddingTop: "78px" }}>
+      <NavBar />
       <Notification />
       <Routes>
         {/* The slash always redirects to blogs or login */}
@@ -55,7 +55,7 @@ const App = () => {
         <Route path="/users" element={<UserList />} />
         <Route path="/users/:id" element={<User />} />
       </Routes>
-    </>
+    </Container>
   );
 };
 

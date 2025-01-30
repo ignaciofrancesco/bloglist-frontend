@@ -1,14 +1,21 @@
-import { useDispatch, useSelector } from "react-redux";
-import BlogForm from "./BlogForm";
-import Togglable from "./Togglable";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from "@mui/material";
 import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { createBlog, initializeBlogs } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
-import { Link } from "react-router-dom";
+import BlogForm from "./BlogForm";
+import Togglable from "./Togglable";
 
 const BlogList = (props) => {
   /* REDUX */
-  const user = useSelector((state) => state.user);
   const blogs = useSelector((state) => state.blogs); // i select the slice of state i need
   const dispatch = useDispatch();
 
@@ -51,15 +58,6 @@ const BlogList = (props) => {
     return b2.likes - b1.likes;
   });
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-    listStyle: "none",
-  };
-
   return (
     <>
       <br></br>
@@ -67,15 +65,20 @@ const BlogList = (props) => {
         <BlogForm createBlog={handleSubmitBlog} />
       </Togglable>
       <br></br>
-      <div className="bloglist">
-        <ul style={{ padding: 0 }}>
-          {blogsSorted.map((blog) => (
-            <li key={blog.id} className="blog" style={blogStyle}>
-              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {blogsSorted.map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+                <TableCell>{blog.author}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 };

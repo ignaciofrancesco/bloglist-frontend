@@ -1,15 +1,18 @@
+import { Alert } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const Notification = () => {
   const notification = useSelector((state) => state.notification);
 
   if (notification === null) {
-    return null;
+    return <div style={{ height: "2.2rem" }}></div>;
   }
 
   return (
-    <div className={`notification ${notification.messageType}`}>
-      <p>{notification.message}</p>
+    <div style={{ height: "2.2rem" }}>
+      <Alert severity={`${notification.messageType}`}>
+        {notification.message}
+      </Alert>
     </div>
   );
 };

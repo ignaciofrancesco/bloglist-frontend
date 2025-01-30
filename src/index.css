@@ -1,23 +1,27 @@
-.notification {
-  background: lightgrey;
-  font-size: 15px;
+.comment {
+  margin: 1rem 0;
+  padding: 1rem;
   border-style: solid;
+  border-width: 0.1rem;
   border-radius: 5px;
-  margin-bottom: 10px;
 }
 
-.error {
-  color: red;
+.comment-list :nth-child(odd) {
+  background-color: rgb(244, 252, 255);
 }
 
-.success {
-  color: green;
-}
-
-.navbar {
-  list-style: none;
-  padding: 0;
+.menu-items-container {
   display: flex;
-  gap: 1em;
-  background-color: lightblue;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Remove the underline by default for all links */
+a {
+  text-decoration: none;
+}
+
+/* Add underline on hover for all links */
+a:hover {
+  text-decoration: underline;
 }

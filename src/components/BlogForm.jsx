@@ -1,3 +1,4 @@
+import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 
 const BlogForm = (props) => {
@@ -27,12 +28,22 @@ const BlogForm = (props) => {
 
   /* VIEW */
   return (
-    <form onSubmit={handleSubmitBlog}>
+    <Box
+      component="form"
+      sx={{
+        "& .MuiTextField-root, & .MuiButton-root": { m: 1, width: "25ch" },
+      }}
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmitBlog}
+    >
       <div>
-        <label htmlFor="title">Title: </label>
-        <input
+        <TextField
           id="title"
           type="text"
+          label="Title"
+          variant="outlined"
+          size="small"
           value={title}
           onChange={(event) => {
             setTitle(event.target.value);
@@ -41,10 +52,12 @@ const BlogForm = (props) => {
         />
       </div>
       <div>
-        <label htmlFor="author">Author: </label>
-        <input
+        <TextField
           id="author"
           type="text"
+          label="author"
+          variant="outlined"
+          size="small"
           value={author}
           onChange={(event) => {
             setAuthor(event.target.value);
@@ -53,10 +66,12 @@ const BlogForm = (props) => {
         />
       </div>
       <div>
-        <label htmlFor="url">Url: </label>
-        <input
+        <TextField
           id="url"
           type="text"
+          label="url"
+          variant="outlined"
+          size="small"
           value={url}
           onChange={(event) => {
             setUrl(event.target.value);
@@ -64,10 +79,11 @@ const BlogForm = (props) => {
           data-testid="url-input"
         />
       </div>
-      <button type="submit" data-testid="create-button">
+
+      <Button type="submit" variant="contained" data-testid="create-button">
         Create
-      </button>
-    </form>
+      </Button>
+    </Box>
   );
 };
 
