@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -7,6 +7,7 @@ import {
   selectBlogById,
   updateBlog,
 } from "../reducers/blogReducer";
+import Comments from "./Comments";
 
 const Blog = (props) => {
   /* REACT ROUTER */
@@ -27,14 +28,7 @@ const Blog = (props) => {
     }
   }, [dispatch, blog, user]);
 
-  /* STATE */
-  const [detailsShowing, setDetailsShowing] = useState(false);
-
   /* HANDLERS */
-
-  const toggleDetails = (event) => {
-    setDetailsShowing(!detailsShowing);
-  };
 
   const handleClickLike = async (event) => {
     // Increase likes
@@ -68,7 +62,7 @@ const Blog = (props) => {
           <h2>
             {blog.title}, by {blog.author}
           </h2>
-          <ul style={{ listStyle: "none", padding: 0 }}>
+          <ul>
             <li>
               <a href={blog.url} target="__blank">
                 {blog.url}
@@ -88,6 +82,7 @@ const Blog = (props) => {
           )}
         </div>
       </div>
+      <Comments comments={blog.comments} />
       <br></br>
       <Link to="/blogs">Back</Link>
     </>
