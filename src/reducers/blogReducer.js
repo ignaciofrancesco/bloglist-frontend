@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useEffect } from "react";
 import blogsService from "../services/blogs";
 import { setNotification } from "./notificationReducer";
 
@@ -80,6 +79,35 @@ export const removeBlog = (blog) => {
       dispatch(
         setNotification({
           message: `Couldn't delete the blog: ${error.message}`,
+          messageType: "error",
+        }),
+      );
+    }
+  };
+};
+
+export const postComment = (commentContent, blog) => {
+  return async (dispatch) => {
+    try {
+      // Create comment object
+      const newComment = { content: commentContent };
+      // Create comment in db
+      const updatedBlog = await blogsService.createComment(newComment, blog);
+      // Update state
+      dispatch(update(updatedBlog));
+
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Comment posted!`,
+          messageType: "success",
+        }),
+      );
+    } catch (error) {
+      // Dispatch redux action to notificate
+      dispatch(
+        setNotification({
+          message: `Couldn't create the comment: ${error.message}`,
           messageType: "error",
         }),
       );

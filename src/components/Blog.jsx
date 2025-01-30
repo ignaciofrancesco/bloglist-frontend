@@ -7,6 +7,7 @@ import {
   selectBlogById,
   updateBlog,
 } from "../reducers/blogReducer";
+import CommentForm from "./CommentForm";
 import Comments from "./Comments";
 
 const Blog = (props) => {
@@ -82,6 +83,8 @@ const Blog = (props) => {
           )}
         </div>
       </div>
+      <h3>Comments</h3>
+      <CommentForm blog={blog} />
       <Comments comments={blog.comments} />
       <br></br>
       <Link to="/blogs">Back</Link>
